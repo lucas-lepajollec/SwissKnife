@@ -1,0 +1,5 @@
+{
+  "name": "SwissKnife",
+  "description": "A universal local file converter using WASM with a modern Bento Grid UI.",
+  "requestFramePermissions": []
+}
