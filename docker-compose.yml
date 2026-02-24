@@ -1,0 +1,16 @@
+# ============================================
+# SwissKnife — Docker Compose
+# Port 2501 → NAS deployment
+# ============================================
+
+services:
+  swissknife:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_APP_TITLE: SwissKnife
+    container_name: swissknife
+    ports:
+      - "2501:80"
+    restart: unless-stopped

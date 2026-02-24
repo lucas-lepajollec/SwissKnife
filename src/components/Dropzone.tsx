@@ -1,12 +1,58 @@
-import React from 'react';
+import React, { useRef, useCallback, useState } from 'react';
 import { Upload, Music, Video, Image as ImageIcon, FileText } from 'lucide-react';
 import { motion } from 'motion/react';
 
-export function Dropzone() {
+interface DropzoneProps {
+  onFilesAdded: (files: File[]) => void;
+}
+
+export function Dropzone({ onFilesAdded }: DropzoneProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const files: File[] = Array.from(e.dataTransfer.files);
+    if (files.length > 0) onFilesAdded(files);
+  }, [onFilesAdded]);
+
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  }, []);
+
+  const handleDragLeave = useCallback(() => setIsDragOver(false), []);
+
+  const handleClick = useCallback(() => inputRef.current?.click(), []);
+
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files: File[] = Array.from(e.target.files ?? []);
+    if (files.length > 0) onFilesAdded(files);
+    // Reset so the same file can be selected again
+    e.target.value = '';
+  }, [onFilesAdded]);
+
   return (
-    <div className="relative h-full min-h-[400px] w-full rounded-3xl border border-dashed border-white/10 bg-[#0A0A0A] p-8 transition-colors hover:bg-white/[0.02] group overflow-hidden">
+    <div
+      className={`relative h-full min-h-[400px] w-full rounded-3xl border border-dashed bg-[#0A0A0A] p-8 transition-all group overflow-hidden cursor-pointer
+        ${isDragOver ? 'border-blue-500/50 bg-blue-500/5 scale-[1.01]' : 'border-white/10 hover:bg-white/[0.02]'}`}
+      onDrop={handleDrop}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onClick={handleClick}
+    >
+      <input
+        ref={inputRef}
+        type="file"
+        multiple
+        className="hidden"
+        accept="video/*,audio/*,image/*"
+        onChange={handleInputChange}
+      />
+
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/[0.03] to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-      
+
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
         <div className="flex gap-4 mb-8">
           {[
@@ -28,14 +74,18 @@ export function Dropzone() {
         </div>
 
         <h3 className="text-2xl font-semibold text-white mb-2 tracking-tight">
-          Déposez n'importe quel fichier
+          {isDragOver ? 'Lâchez pour ajouter' : "Déposez n'importe quel fichier"}
         </h3>
         <p className="text-gray-400 mb-8 max-w-md text-sm leading-relaxed">
           Audio, Vidéo, Image ou Document. <br />
           Vos fichiers ne quittent jamais votre navigateur.
         </p>
 
-        <button className="group relative inline-flex items-center justify-center rounded-full bg-white/5 px-8 py-3 text-xs font-semibold uppercase tracking-widest text-white transition-all hover:bg-white/10 hover:scale-105 active:scale-95 border border-white/10">
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); handleClick(); }}
+          className="group relative inline-flex items-center justify-center rounded-full bg-white/5 px-8 py-3 text-xs font-semibold uppercase tracking-widest text-white transition-all hover:bg-white/10 hover:scale-105 active:scale-95 border border-white/10"
+        >
           <span className="mr-2">Ou cliquez pour parcourir</span>
           <Upload className="h-4 w-4 opacity-50 transition-transform group-hover:-translate-y-0.5" />
         </button>
