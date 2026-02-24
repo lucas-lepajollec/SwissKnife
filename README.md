@@ -69,20 +69,27 @@ The app will be available at **http://localhost:2499**.
 
 ## 🐳 Docker Deployment
 
-SwissKnife ships with a multi-stage Dockerfile (Node build → Nginx serve).
+A pre-built image is published on **GitHub Container Registry** — no need to clone the repo or build anything.
+
+**1. Create a `docker-compose.yml` file:**
+
+```yaml
+services:
+  swissknife:
+    image: ghcr.io/lucas-lepajollec/swissknife:latest
+    container_name: swissknife
+    ports:
+      - "2501:80"
+    restart: unless-stopped
+```
+
+**2. Start the container:**
 
 ```bash
-# Build and run with Docker Compose
 docker compose up -d
 ```
 
 The app will be available at **http://localhost:2501**.
-
-| File | Purpose |
-|------|---------|
-| `Dockerfile` | Multi-stage build (Node 20 → Nginx Alpine) |
-| `docker-compose.yml` | One-command deployment on port `2501` |
-| `nginx.conf` | Production-ready Nginx configuration |
 
 ---
 
