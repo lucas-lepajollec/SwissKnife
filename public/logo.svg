@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- Premium Dark Background -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09090b" />
+      <stop offset="100%" stop-color="#000000" />
+    </linearGradient>
+
+    <!-- Glass Refraction Edge -->
+    <linearGradient id="edge" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.15" />
+      <stop offset="50%" stop-color="#ffffff" stop-opacity="0.0" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.05" />
+    </linearGradient>
+
+    <!-- Core Metallic Gradient for the S Structure -->
+    <linearGradient id="metalCore" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f4f4f5" />
+      <stop offset="45%" stop-color="#a1a1aa" />
+      <stop offset="55%" stop-color="#71717a" />
+      <stop offset="100%" stop-color="#3f3f46" />
+    </linearGradient>
+
+    <!-- Vibrant Cyan-Indigo Cyber Flow -->
+    <linearGradient id="cyberFlow" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="1" />
+      <stop offset="40%" stop-color="#6366f1" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#a855f7" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="coreGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee" />
+      <stop offset="100%" stop-color="#818cf8" />
+    </linearGradient>
+
+    <!-- Heavy Drop Shadow for depth -->
+    <filter id="ultraShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="20" stdDeviation="24" flood-color="#000000" flood-opacity="0.9" />
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
+
+    <!-- Intense Bloom/Glow for the active 'processing' node -->
+    <filter id="bloom" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="16" result="blur1" />
+      <feGaussianBlur stdDeviation="32" result="blur2" />
+      <feMerge>
+        <feMergeNode in="blur2" />
+        <feMergeNode in="blur1" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Base Squircle -->
+  <rect width="512" height="512" rx="120" fill="url(#bg)" />
+  <rect x="2" y="2" width="508" height="508" rx="120" fill="none" stroke="url(#edge)" stroke-width="4" />
+
+  <!-- Abstract S / Infinity Hybrid Form -->
+  <!-- We use a very thick continuous stroke with rounded caps to form the structure -->
+  <g transform="translate(128, 128)" filter="url(#ultraShadow)">
+    
+    <!-- Outer metallic tube structure -->
+    <path d="M 256,64 
+             C 256,28.65 227.35,0 192,0 
+             L 64,0 
+             C 28.65,0 0,28.65 0,64 
+             C 0,99.35 28.65,128 64,128 
+             L 192,128 
+             C 227.35,128 256,156.65 256,192 
+             C 256,227.35 227.35,256 192,256 
+             L 64,256" 
+          stroke="url(#metalCore)" stroke-width="64" stroke-linecap="round" fill="none" />
+          
+    <!-- Inner Cybernetic Flow intersecting the metal -->
+    <path d="M 256,64 
+             C 256,28.65 227.35,0 192,0 
+             L 64,0 
+             C 28.65,0 0,28.65 0,64 
+             C 0,99.35 28.65,128 64,128 
+             L 192,128 
+             C 227.35,128 256,156.65 256,192 
+             C 256,227.35 227.35,256 192,256 
+             L 64,256" 
+          stroke="url(#cyberFlow)" stroke-width="64" stroke-linecap="round" fill="none" style="mix-blend-mode: screen;" />
+          
+    <!-- 3D Bevel / Ridge highlights inside the tube -->
+    <path d="M 256,64 
+             C 256,28.65 227.35,0 192,0 
+             L 64,0 
+             C 28.65,0 0,28.65 0,64 
+             C 0,99.35 28.65,128 64,128 
+             L 192,128 
+             C 227.35,128 256,156.65 256,192 
+             C 256,227.35 227.35,256 192,256 
+             L 64,256" 
+          stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.4" />
+          
+    <!-- Inner shadow illusion on top curve -->
+    <path d="M 256,64 C 256,28.65 227.35,0 192,0 L 64,0" 
+          stroke="#000000" stroke-width="8" stroke-linecap="round" fill="none" opacity="0.2" transform="translate(0, 16)" />
+
+    <!-- Pure Energy Core Node (The actual 'WASM' processor representation) -->
+    <!-- The line ends at X=64, Y=256. A circle of R=32 exactly caps the rounded line end -->
+    <circle cx="64" cy="256" r="32" fill="url(#coreGlow)" filter="url(#bloom)" />
+    <!-- White hot center -->
+    <circle cx="64" cy="256" r="16" fill="#ffffff" />
+    
+  </g>
+</svg>

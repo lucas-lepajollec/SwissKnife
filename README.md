@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./public/logo.svg" alt="SwissKnife Logo" width="128" height="128" />
+
 # 🔧 SwissKnife
 
 **A universal file converter that runs entirely in your browser.**

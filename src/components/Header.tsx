@@ -14,9 +14,7 @@ export function Header({ loaded, loading, consoleVisible, onToggleConsole }: Hea
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white text-black font-bold text-xl tracking-tighter shrink-0">
-            SK
-          </div>
+          <img src="/logo.svg" alt="SwissKnife Logo" className="w-[44px] h-[44px] shrink-0 drop-shadow-[0_0_12px_rgba(6,182,212,0.15)]" />
           <div className="flex flex-col">
             <h1 className="text-lg font-bold text-white leading-none tracking-tight">SwissKnife</h1>
             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-1 hidden sm:block">Universal Local Processor</span>
