@@ -15,6 +15,11 @@ Convert video, audio, and image files instantly — no upload, no server, no lim
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
+<br/>
+
+<!-- Remplace "screenshot.png" par le vrai nom de ton image si besoin -->
+<img src="./public/swissknife.png" alt="SwissKnife Interface Screenshot" width="800" />
+
 </div>
 
 ---
@@ -52,10 +57,9 @@ Convert video, audio, and image files instantly — no upload, no server, no lim
 - [Node.js](https://nodejs.org) (v18+)
 
 ### Local Development
-
 ```bash
 # Clone the repository
-git clone https://github.com/lucas-lepajollec/SwissKnife.git
+git clone [https://github.com/lucas-lepajollec/SwissKnife.git](https://github.com/lucas-lepajollec/SwissKnife.git)
 cd SwissKnife
 
 # Install dependencies
@@ -74,7 +78,6 @@ The app will be available at **http://localhost:2499**.
 A pre-built image is published on **GitHub Container Registry** — no need to clone the repo or build anything.
 
 **1. Create a `docker-compose.yml` file:**
-
 ```yaml
 services:
   swissknife:
@@ -110,8 +113,7 @@ The app will be available at **http://localhost:2501**.
 ---
 
 ## 📂 Project Structure
-
-```
+```text
 SwissKnife/
 ├── src/
 │   ├── components/       # UI components
@@ -150,13 +152,9 @@ SwissKnife/
 
 ## 🤝 Contributing
 
-Contributions are welcome! Feel free to open an issue or submit a pull request.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+Please read our [Contributing Guidelines](CONTRIBUTING.md) to learn how to setup your environment, and our [Code of Conduct](CODE_OF_CONDUCT.md) for details on our community standards.
 
 ---
 
