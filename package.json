@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite --port=2499 --host=0.0.0.0",
     "build": "vite build",
+    "build:demo": "node scripts/build-demo.mjs",
     "preview": "vite preview --port=2499 --host=0.0.0.0",
     "clean": "node -e \"import('node:fs').then(fs => fs.rmSync('dist', { recursive: true, force: true }))\"",
     "lint": "tsc --noEmit && eslint src vite.config.ts",

@@ -20,6 +20,11 @@ export function Header({ loaded, loading, consoleVisible, onToggleConsole }: Hea
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          {import.meta.env.VITE_DEMO === 'true' && (
+            <span className="rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide text-cyan-300">
+              Démo
+            </span>
+          )}
           <div className="flex items-center gap-2 rounded-full bg-[#111] border border-white/10 px-3 py-1.5" aria-live="polite">
             {loading ? (
               <>

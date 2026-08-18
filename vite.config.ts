@@ -58,6 +58,39 @@ function ffmpegCorePlugin(): Plugin {
   };
 }
 
+function demoModePlugin(): Plugin {
+  const isDemo = process.env.VITE_DEMO === 'true' || process.env.VERCEL === '1';
+  return {
+    name: 'swissknife-demo-mode',
+    config() {
+      return {
+        define: {
+          'import.meta.env.VITE_DEMO': JSON.stringify(isDemo ? 'true' : ''),
+        },
+      };
+    },
+    transformIndexHtml(html) {
+      if (!isDemo) return html;
+      return html
+        .replace(
+          '<meta name="theme-color"',
+          '<meta name="robots" content="noindex, nofollow" />\n  <meta name="theme-color"',
+        )
+        .replace(
+          '<title>SwissKnife — convertisseur local</title>',
+          '<title>SwissKnife — démo publique</title>',
+        );
+    },
+    closeBundle() {
+      if (!isDemo) return;
+      fs.writeFileSync(
+        path.resolve('dist/robots.txt'),
+        'User-agent: *\nDisallow: /\n',
+      );
+    },
+  };
+}
+
 const isolationHeaders = {
   'Cross-Origin-Embedder-Policy': 'require-corp',
   'Cross-Origin-Opener-Policy': 'same-origin',
@@ -68,7 +101,7 @@ const isolationHeaders = {
 };
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), ffmpegCorePlugin()],
+  plugins: [react(), tailwindcss(), ffmpegCorePlugin(), demoModePlugin()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

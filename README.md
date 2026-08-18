@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./public/logo.svg" alt="SwissKnife" width="128" height="128" />
+<img src="./public/logo.png" alt="SwissKnife" width="128" height="128" />
 
 # SwissKnife
 
@@ -98,6 +98,14 @@ Les tags d’image poussés par la CI : `latest` sur `main`, plus le tag Git (`v
 
 ---
 
+## Démo publique
+
+Même application, même dépôt. Fichiers toujours locaux dans le navigateur.
+
+Le déploiement Vercel (noindex, headers WASM) est décrit dans [DEMO.md](DEMO.md). Ne pas annoncer l’URL publique tant qu’elle ne répond pas en HTTPS `200`.
+
+---
+
 ## Stack
 
 | Couche | Choix |
@@ -119,6 +127,7 @@ Les tags d’image poussés par la CI : `latest` sur `main`, plus le tag Git (`v
 | `npm test` | Vitest |
 | `npm run lint` | `tsc --noEmit` + ESLint |
 | `npm run build` | Build + copie du core FFmpeg dans `dist/ffmpeg/` |
+| `npm run build:demo` | Build Vercel (`VITE_DEMO=true`, noindex) |
 | `npm run preview` | Preview, mêmes headers WASM que le dev |
 | `npm run clean` | Supprime `dist/` |
 
@@ -141,6 +150,8 @@ SwissKnife/
 ├── docker-compose.yml          # image GHCR
 ├── docker-compose.build.yml    # build local
 ├── nginx.conf
+├── vercel.json                 # démo publique
+├── DEMO.md
 └── package.json
 ```
 
