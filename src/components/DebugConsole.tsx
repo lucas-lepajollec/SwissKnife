@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Terminal, ChevronUp, ChevronDown, Info, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -17,7 +17,7 @@ interface DebugConsoleProps {
 }
 
 export function DebugConsole({ logs, onClear, visible, onToggleVisible }: DebugConsoleProps) {
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new logs arrive
@@ -44,7 +44,7 @@ export function DebugConsole({ logs, onClear, visible, onToggleVisible }: DebugC
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setIsExpanded(!isExpanded); }}
             className="w-full h-10 flex items-center justify-between px-4 bg-[#111] hover:bg-[#161616] transition-colors border-b border-white/5 cursor-pointer select-none"
           >
-            <div className="flex items-center gap-2 text-xs font-mono text-gray-400">
+            <div className="flex items-center gap-2 text-xs font-mono text-gray-300">
               <Terminal size={14} />
               <span>CONSOLE FFMPEG</span>
               <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px]">

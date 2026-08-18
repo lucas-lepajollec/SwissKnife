@@ -1,4 +1,3 @@
-import React from 'react';
 import { Loader2, Terminal } from 'lucide-react';
 
 interface HeaderProps {
@@ -10,53 +9,50 @@ interface HeaderProps {
 
 export function Header({ loaded, loading, consoleVisible, onToggleConsole }: HeaderProps) {
   return (
-    <header className="w-full py-4 sm:py-6 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Logo */}
+    <header className="w-full py-4 sm:py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src="/logo.svg" alt="SwissKnife Logo" className="w-[44px] h-[44px] shrink-0 drop-shadow-[0_0_12px_rgba(6,182,212,0.15)]" />
+          <img src="/logo.svg" alt="" width={44} height={44} className="w-[44px] h-[44px] shrink-0 drop-shadow-[0_0_12px_rgba(6,182,212,0.15)]" />
           <div className="flex flex-col">
             <h1 className="text-lg font-bold text-white leading-none tracking-tight">SwissKnife</h1>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mt-1 hidden sm:block">Universal Local Processor</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1 hidden sm:block">Convertisseur local</span>
           </div>
         </div>
 
-        {/* Status & Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* WASM Status — visible on all devices */}
-          <div className="flex items-center gap-2 rounded-full bg-[#111] border border-white/5 px-3 py-1.5">
+          <div className="flex items-center gap-2 rounded-full bg-[#111] border border-white/10 px-3 py-1.5" aria-live="polite">
             {loading ? (
               <>
-                <Loader2 className="h-3 w-3 text-yellow-400 animate-spin" />
-                <span className="text-[10px] font-medium text-yellow-400 uppercase tracking-wide">WASM...</span>
+                <Loader2 className="h-3 w-3 text-amber-300 animate-spin" aria-hidden="true" />
+                <span className="text-[10px] font-medium text-amber-300 uppercase tracking-wide">Chargement…</span>
               </>
             ) : loaded ? (
               <>
-                <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wide whitespace-nowrap">
-                  <span className="hidden sm:inline">WASM Engine </span>Online
+                <div className="h-2 w-2 rounded-full bg-emerald-400 shrink-0" />
+                <span className="text-[10px] font-medium text-gray-300 uppercase tracking-wide whitespace-nowrap">
+                  <span className="hidden sm:inline">Moteur </span>prêt
                 </span>
               </>
             ) : (
               <>
-                <div className="h-2 w-2 rounded-full bg-gray-600 shrink-0" />
-                <span className="text-[10px] font-medium text-gray-500 uppercase tracking-wide whitespace-nowrap">
-                  <span className="hidden sm:inline">WASM </span>Standby
+                <div className="h-2 w-2 rounded-full bg-gray-500 shrink-0" />
+                <span className="text-[10px] font-medium text-gray-400 uppercase tracking-wide whitespace-nowrap">
+                  Moteur inactif
                 </span>
               </>
             )}
           </div>
 
-          {/* Console Toggle */}
           <button
+            type="button"
             onClick={onToggleConsole}
-            className={`flex items-center justify-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-medium uppercase tracking-wide transition-all active:scale-95 ${consoleVisible
-              ? 'bg-blue-500/10 border-blue-500/30 text-blue-400 hover:bg-blue-500/20'
-              : 'bg-[#111] border-white/5 text-gray-500 hover:text-gray-300 hover:border-white/10'
+            aria-pressed={consoleVisible}
+            className={`flex items-center justify-center gap-2 rounded-full border px-3 py-1.5 text-[10px] font-medium uppercase tracking-wide transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400 ${consoleVisible
+              ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-300 hover:bg-cyan-500/20'
+              : 'bg-[#111] border-white/10 text-gray-400 hover:text-gray-200 hover:border-white/20'
               }`}
-            title={consoleVisible ? 'Masquer la console' : 'Afficher la console'}
           >
-            <Terminal className="h-3 w-3" />
+            <Terminal className="h-3 w-3" aria-hidden="true" />
             <span className="hidden sm:inline">Console</span>
           </button>
         </div>

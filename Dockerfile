@@ -1,38 +1,35 @@
 # ============================================
-# SwissKnife — Dockerfile (Multi-stage)
-# Stage 1: Build with Node
-# Stage 2: Serve with Nginx
+# SwissKnife — Dockerfile (multi-stage)
+# Stage 1: Node 20 build
+# Stage 2: nginx unprivileged on 8080
 # ============================================
 
-# ---- Stage 1: Build ----
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Accept build-time variables
 ARG VITE_APP_TITLE=SwissKnife
 ENV VITE_APP_TITLE=$VITE_APP_TITLE
 
-# Install dependencies first (better layer caching)
 COPY package.json package-lock.json* ./
 RUN npm ci
 
-# Copy source and build
 COPY . .
 RUN npm run build
 
-# ---- Stage 2: Serve ----
-FROM nginx:alpine
+FROM nginxinc/nginx-unprivileged:1.27-alpine
 
-# Remove default nginx config
-RUN rm /etc/nginx/conf.d/default.conf
-
-# Copy custom nginx config
+USER root
+RUN apk add --no-cache wget \
+    && rm -f /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Copy built files from builder
 COPY --from=builder /app/dist /usr/share/nginx/html
+RUN chown -R nginx:nginx /usr/share/nginx/html
+USER nginx
 
-EXPOSE 80
+EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:8080/ >/dev/null || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]

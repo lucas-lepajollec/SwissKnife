@@ -1,9 +1,13 @@
-# Image GHCR publiée — à utiliser en homelab / NAS.
-# Pour construire depuis les sources : docker compose -f docker-compose.build.yml up -d
+# Construction locale depuis ce dépôt (contributeurs).
+# Usage : docker compose -f docker-compose.build.yml up -d --build
 
 services:
   swissknife:
-    image: ghcr.io/lucas-lepajollec/swissknife:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VITE_APP_TITLE: SwissKnife
     container_name: swissknife
     ports:
       - "2501:8080"

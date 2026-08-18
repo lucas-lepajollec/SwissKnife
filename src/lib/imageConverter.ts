@@ -1,10 +1,3 @@
-// ============================================
-// SwissKnife — Image Converter (Canvas API)
-// Uses the native browser Canvas API for
-// image-to-image conversion. Much faster and
-// more reliable than FFmpeg WASM for images.
-// ============================================
-
 export interface CanvasConvertResult {
     blob: Blob;
     blobUrl: string;
@@ -15,8 +8,6 @@ const MIME_MAP: Record<string, string> = {
     jpeg: 'image/jpeg',
     png: 'image/png',
     webp: 'image/webp',
-    bmp: 'image/bmp',
-    tiff: 'image/tiff',
 };
 
 const QUALITY_MAP: Record<string, number> = {
@@ -26,70 +17,108 @@ const QUALITY_MAP: Record<string, number> = {
     webp: 0.85,
 };
 
+const CANVAS_OUTPUTS = new Set(['jpg', 'jpeg', 'png', 'webp']);
+
+export class ConversionCancelledError extends Error {
+    constructor(message = 'Conversion annulée') {
+        super(message);
+        this.name = 'ConversionCancelledError';
+    }
+}
+
+function throwIfAborted(signal?: AbortSignal): void {
+    if (signal?.aborted) throw new ConversionCancelledError();
+}
+
 /**
- * Convert an image file to another format using the Canvas API.
- * Supports: JPG, PNG, WEBP natively.
- * BMP and TIFF: falls back to PNG with the correct extension.
+ * Convert an image with the Canvas API.
+ * Outputs: JPG, PNG, WEBP only.
  */
 export async function convertImageCanvas(
     file: File,
     outputFormat: string,
     onProgress?: (pct: number) => void,
+    signal?: AbortSignal,
 ): Promise<CanvasConvertResult> {
-    onProgress?.(10);
-
-    // 1. Load the image into an HTMLImageElement
-    const imgUrl = URL.createObjectURL(file);
-    const img = await loadImage(imgUrl);
-    URL.revokeObjectURL(imgUrl);
-
-    onProgress?.(40);
-
-    // 2. Draw onto a canvas
-    const canvas = document.createElement('canvas');
-    canvas.width = img.naturalWidth;
-    canvas.height = img.naturalHeight;
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) throw new Error('Impossible de créer un contexte Canvas 2D');
-
-    // White background for JPEG (which doesn't support transparency)
-    if (outputFormat === 'jpg' || outputFormat === 'jpeg') {
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    throwIfAborted(signal);
+    const format = outputFormat.toLowerCase();
+    if (!CANVAS_OUTPUTS.has(format)) {
+        throw new Error(`Sortie image non supportée : ${format.toUpperCase()}. Utilisez JPG, PNG ou WEBP.`);
     }
 
-    ctx.drawImage(img, 0, 0);
+    const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
+    onProgress?.(10);
 
-    onProgress?.(70);
+    const imgUrl = URL.createObjectURL(file);
+    try {
+        const img = await loadImage(imgUrl, signal);
+        throwIfAborted(signal);
+        onProgress?.(40);
 
-    // 3. Export to the target format
-    const mimeType = MIME_MAP[outputFormat] ?? 'image/png';
-    const quality = QUALITY_MAP[outputFormat] ?? 1;
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Impossible de créer un contexte Canvas 2D');
 
-    const blob = await new Promise<Blob>((resolve, reject) => {
-        canvas.toBlob(
-            (b) => {
-                if (b) resolve(b);
-                else reject(new Error(`Échec de l'export en ${outputFormat.toUpperCase()}`));
-            },
-            mimeType,
-            quality,
-        );
-    });
+        if (format === 'jpg' || format === 'jpeg') {
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
 
-    onProgress?.(100);
+        ctx.drawImage(img, 0, 0);
+        onProgress?.(70);
+        throwIfAborted(signal);
 
-    const blobUrl = URL.createObjectURL(blob);
-    return { blob, blobUrl };
+        const mimeType = MIME_MAP[format];
+        const quality = QUALITY_MAP[format] ?? 1;
+        const blob = await new Promise<Blob>((resolve, reject) => {
+            canvas.toBlob(
+                (b) => {
+                    if (b) resolve(b);
+                    else reject(new Error(`Échec de l'export en ${format.toUpperCase()}`));
+                },
+                mimeType,
+                quality,
+            );
+        });
+
+        onProgress?.(100);
+        return { blob, blobUrl: URL.createObjectURL(blob) };
+    } catch (err) {
+        if (err instanceof ConversionCancelledError) throw err;
+        if (ext === 'tif' || ext === 'tiff') {
+            throw new Error('Ce navigateur ne peut pas lire le TIFF. Exportez d’abord en PNG ou JPG.', { cause: err });
+        }
+        if (err instanceof Error && err.message.includes('charger')) {
+            throw new Error(`Impossible de lire cette image (${ext || 'format inconnu'}).`, { cause: err });
+        }
+        throw err;
+    } finally {
+        URL.revokeObjectURL(imgUrl);
+    }
 }
 
-// ---- Helper: load image from URL ----
-function loadImage(src: string): Promise<HTMLImageElement> {
+function loadImage(src: string, signal?: AbortSignal): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
         const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = () => reject(new Error('Impossible de charger l\'image'));
+        const onAbort = () => {
+            img.src = '';
+            reject(new ConversionCancelledError());
+        };
+        if (signal?.aborted) {
+            onAbort();
+            return;
+        }
+        signal?.addEventListener('abort', onAbort, { once: true });
+        img.onload = () => {
+            signal?.removeEventListener('abort', onAbort);
+            resolve(img);
+        };
+        img.onerror = () => {
+            signal?.removeEventListener('abort', onAbort);
+            reject(new Error('Impossible de charger l\'image'));
+        };
         img.src = src;
     });
 }
