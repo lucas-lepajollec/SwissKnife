@@ -52,7 +52,12 @@ function ffmpegCorePlugin(): Plugin {
       const outDir = path.resolve('dist/ffmpeg');
       fs.mkdirSync(outDir, { recursive: true });
       for (const file of files) {
-        fs.copyFileSync(path.join(esmDir, file), path.join(outDir, file));
+        const from = path.join(esmDir, file);
+        const to = path.join(outDir, file);
+        if (!fs.existsSync(from)) {
+          throw new Error(`FFmpeg core manquant: ${from}`);
+        }
+        fs.copyFileSync(from, to);
       }
     },
   };
