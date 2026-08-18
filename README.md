@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./public/logo.png" alt="SwissKnife" width="128" height="128" />
+<img src="./public/mark.png" alt="SwissKnife" width="128" height="128" />
 
 # SwissKnife
 
@@ -17,7 +17,7 @@ Aucun envoi de vos médias. Pas de compte. Pas de serveur de conversion.
 
 <br/>
 
-<img src="./public/swissknife.png" alt="Interface SwissKnife" width="800" />
+<img src="./public/screenshot.png" alt="Interface SwissKnife" width="800" />
 
 </div>
 
