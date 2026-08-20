@@ -64,6 +64,9 @@ npm run dev
 
 Interface : **http://localhost:2499**
 
+Le serveur reste lié à `127.0.0.1` par défaut. Pour tester SwissKnife depuis un
+autre appareil du réseau local, utilisez `npm run dev:lan`.
+
 ---
 
 ## Docker
@@ -124,6 +127,7 @@ Le déploiement Vercel (noindex, headers WASM) est décrit dans [DEMO.md](DEMO.m
 | Commande | Rôle |
 |----------|------|
 | `npm run dev` | Dev, port 2499 |
+| `npm run dev:lan` | Dev accessible sur le réseau local, port 2499 |
 | `npm test` | Vitest |
 | `npm run lint` | `tsc --noEmit` + ESLint |
 | `npm run build` | Build + copie du core FFmpeg dans `dist/ffmpeg/` |

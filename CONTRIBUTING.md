@@ -20,6 +20,9 @@ npm run dev
 
 App URL: `http://localhost:2499`
 
+The development server is loopback-only by default. Use `npm run dev:lan`
+only when testing from another device on a trusted local network.
+
 ### Option 2 — Docker from source
 
 ```bash

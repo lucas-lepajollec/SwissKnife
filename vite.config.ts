@@ -113,10 +113,12 @@ export default defineConfig({
     },
   },
   server: {
+    host: '127.0.0.1',
     port: 2499,
     headers: isolationHeaders,
   },
   preview: {
+    host: '127.0.0.1',
     port: 2499,
     headers: isolationHeaders,
   },
