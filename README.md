@@ -1,79 +1,69 @@
 <div align="center">
+  <img src="public/mark.png" alt="SwissKnife mark" width="112" height="112" />
+  <h1>SwissKnife</h1>
+  <p><strong>Local-first image, audio, and video conversion—directly in your browser.</strong></p>
+  <p>Your files stay in the tab. No account. No conversion server.</p>
 
-<img src="./public/mark.png" alt="SwissKnife" width="128" height="128" />
+  <p>
+    <a href="https://swissknife.lucas-homelab.fr"><strong>Website</strong></a> ·
+    <a href="https://demo.swissknife.lucas-homelab.fr"><strong>Live demo</strong></a> ·
+    <a href="https://docs.swissknife.lucas-homelab.fr"><strong>Documentation</strong></a>
+  </p>
 
-# SwissKnife
+  <p>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-5b8def" alt="MIT license" /></a>
+    <img src="https://img.shields.io/badge/processing-local-111827" alt="Local processing" />
+    <img src="https://img.shields.io/badge/FFmpeg-WebAssembly-111827" alt="FFmpeg WebAssembly" />
+  </p>
 
-**Convertisseur de fichiers local : audio, vidéo et images, dans le navigateur.**
-
-Aucun envoi de vos médias. Pas de compte. Pas de serveur de conversion.
-
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)](https://vite.dev)
-[![FFmpeg WASM](https://img.shields.io/badge/FFmpeg-WASM-007808?logo=ffmpeg&logoColor=white)](https://ffmpegwasm.netlify.app)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
-<br/>
-
-<img src="./public/screenshot.png" alt="Interface SwissKnife" width="800" />
-
+  <img src="docs/assets/screenshots/swissknife-demo.png" alt="SwissKnife local media conversion interface" width="1200" />
 </div>
 
----
+SwissKnife converts common media formats without sending source files to a third-party conversion service. Images use browser-native Canvas APIs; audio and video use a single-threaded FFmpeg WebAssembly engine served with the application.
 
-## Ce que l’app fait vraiment
+That boundary is the product: media is represented by browser `File` and `blob:` objects, conversion happens in the current tab, and the result is downloaded by the user.
 
-- **Médias utilisateur** — restent dans l’onglet (`File` + `blob:`). Pas d’upload.
-- **Images** — API Canvas. Sorties : JPG, PNG, WEBP. Plusieurs images peuvent être converties **en même temps**.
-- **Audio / vidéo** — FFmpeg WASM (un thread). Le core est servi **par cette application** (`/ffmpeg/`) ; il n’est plus téléchargé depuis unpkg. Une seule conversion FFmpeg à la fois (file d’attente) ; vous pouvez quand même lancer plusieurs fichiers, ils s’enchaînent.
-- **GIF** — traité comme une vidéo (FFmpeg), pas comme une image Canvas.
-- **TIFF / BMP** — lus en entrée seulement si le navigateur les décode. **Pas proposés en sortie** (Canvas ne les encode pas de façon fiable).
-- **Autres types** (PDF, texte, etc.) — refusés, pas mis en file.
-- **Limite pratique** — pas de plafond artificiel, mais au-delà de **50 Mo** un avertissement s’affiche : la mémoire de l’onglet peut saturer.
+## What it does
 
-Le moteur FFmpeg est téléchargé depuis **cette origine** au premier fichier audio/vidéo. Après ça, plus besoin du réseau pour convertir. Une conversion d’images seules ne charge pas FFmpeg.
+- Converts multiple images concurrently with the Canvas API.
+- Queues audio and video conversions through one FFmpeg WASM worker.
+- Serves the FFmpeg core from the same application origin instead of a public CDN.
+- Loads FFmpeg only when an audio or video file requires it.
+- Rejects unsupported document and arbitrary file types before they enter the queue.
+- Shows a practical memory warning above 50 MB rather than pretending browser memory is unlimited.
+- Runs as a static application or an unprivileged Nginx container.
 
-Voir aussi [NOTICE.md](NOTICE.md) (licences FFmpeg / x264).
+## Supported formats
 
----
+| Category | Recognized input | Output |
+| --- | --- | --- |
+| Video | MP4, MKV, WEBM, AVI, MOV, GIF | MP4, MKV, WEBM, AVI, MOV, GIF |
+| Audio | MP3, WAV, AAC, OGG, FLAC, M4A | MP3, WAV, AAC, OGG, FLAC |
+| Image | JPG, PNG, WEBP; BMP/TIFF when the browser can decode them | JPG, PNG, WEBP |
 
-## Formats
+GIF is handled by FFmpeg as video. BMP and TIFF support depends on browser decoding and they are not offered as output formats because Canvas cannot encode them reliably.
 
-| Catégorie | Entrées reconnues | Sorties |
-|----------|-------------------|---------|
-| **Vidéo** | MP4, MKV, WEBM, AVI, MOV, GIF | MP4, MKV, WEBM, AVI, MOV, GIF |
-| **Audio** | MP3, WAV, AAC, OGG, FLAC, M4A (entrée) | MP3, WAV, AAC, OGG, FLAC |
-| **Image** | JPG, PNG, WEBP ; BMP/TIFF si le navigateur les lit | JPG, PNG, WEBP |
+The codecs actually available are those compiled into `@ffmpeg/core@0.12.6`. A listed container can still fail when its internal codec or media structure is unsupported. See [NOTICE.md](NOTICE.md) for FFmpeg and x264 licensing information.
 
-Les codecs réellement disponibles sont ceux du core `@ffmpeg/core@0.12.6` (dont libx264 / libmp3lame dans la pratique actuelle). Un fichier peut quand même échouer selon le contenu.
+## Quick start
 
----
+### Requirements
 
-## Démarrage
-
-**Node.js 20+**
+- Node.js 20 or newer.
+- A modern browser with WebAssembly support.
 
 ```bash
 git clone https://github.com/lucas-lepajollec/SwissKnife.git
 cd SwissKnife
-npm install
+npm ci
 npm run dev
 ```
 
-Interface : **http://localhost:2499**
-
-Le serveur reste lié à `127.0.0.1` par défaut. Pour tester SwissKnife depuis un
-autre appareil du réseau local, utilisez `npm run dev:lan`.
-
----
+Open `http://127.0.0.1:2499`. Local development binds only to localhost by default; use `npm run dev:lan` deliberately when testing from another device on a trusted network.
 
 ## Docker
 
-Image publique : `ghcr.io/lucas-lepajollec/swissknife:latest`
-
-Le conteneur écoute sur le port **8080** (utilisateur non-root). Exposez-le en 2501 sur l’hôte.
+The published image listens on port `8080` as a non-root user:
 
 ```yaml
 services:
@@ -89,80 +79,63 @@ services:
 docker compose up -d
 ```
 
-→ **http://localhost:2501**
-
-Le fichier `docker-compose.yml` du dépôt est déjà ce modèle. Pour construire depuis les sources :
+Open `http://localhost:2501`. The repository's `docker-compose.yml` uses the published image; build the current checkout with:
 
 ```bash
 docker compose -f docker-compose.build.yml up -d --build
 ```
 
-Les tags d’image poussés par la CI : `latest` sur `main`, plus le tag Git (`v1.0.0`, etc.).
+Validated `main` builds publish `latest`; release tags publish matching image tags such as `v1.0.0`.
 
----
+## Privacy and limitations
 
-## Démo publique
+- User media stays in the browser tab and is never uploaded by SwissKnife.
+- The FFmpeg runtime is downloaded from this application on first audio/video use; image-only conversion does not load it.
+- The browser holds both input and output data in memory. Large files can exhaust the tab even when disk space is available.
+- Conversion speed and codec support depend on the browser, device memory, and the bundled FFmpeg build.
+- Deploying the static app yourself does not introduce a media-processing backend.
 
-Même application, même dépôt. Fichiers toujours locaux dans le navigateur.
+The project does not claim that every theoretically valid codec/container combination works. Support is constrained by the browser and the exact FFmpeg WASM build.
 
-Le déploiement Vercel (noindex, headers WASM) est décrit dans [DEMO.md](DEMO.md). Ne pas annoncer l’URL publique tant qu’elle ne répond pas en HTTPS `200`.
+## Architecture
 
----
-
-## Stack
-
-| Couche | Choix |
-|--------|--------|
-| UI | React 19 + TypeScript (strict) |
-| Build | Vite 6 |
-| Style | Tailwind CSS 4 |
-| Images | Canvas API |
-| Audio / vidéo | FFmpeg WASM 0.12, core local |
-| Prod | Docker + Nginx unprivileged |
-
----
-
-## Scripts
-
-| Commande | Rôle |
-|----------|------|
-| `npm run dev` | Dev, port 2499 |
-| `npm run dev:lan` | Dev accessible sur le réseau local, port 2499 |
-| `npm test` | Vitest |
-| `npm run lint` | `tsc --noEmit` + ESLint |
-| `npm run build` | Build + copie du core FFmpeg dans `dist/ffmpeg/` |
-| `npm run build:demo` | Build Vercel (`VITE_DEMO=true`, noindex) |
-| `npm run preview` | Preview, mêmes headers WASM que le dev |
-| `npm run clean` | Supprime `dist/` |
-
----
-
-## Structure
+| Layer | Technology |
+| --- | --- |
+| Interface | React 19, TypeScript, Tailwind CSS 4 |
+| Image conversion | Canvas API |
+| Audio/video conversion | FFmpeg WASM 0.12, same-origin core |
+| Build and tests | Vite 6, Vitest, ESLint, TypeScript |
+| Production | Docker and unprivileged Nginx |
 
 ```text
-SwissKnife/
-├── src/
-│   ├── components/
-│   ├── hooks/useFFmpeg.ts
-│   ├── lib/
-│   │   ├── formats.ts
-│   │   ├── imageConverter.ts
-│   │   └── ffmpegEngine.ts
-│   ├── App.tsx
-│   └── main.tsx
-├── Dockerfile
-├── docker-compose.yml          # image GHCR
-├── docker-compose.build.yml    # build local
-├── nginx.conf
-├── vercel.json                 # démo publique
-├── DEMO.md
-└── package.json
+src/
+├── components/              # Interface and queue views
+├── hooks/useFFmpeg.ts       # Worker lifecycle
+├── lib/
+│   ├── formats.ts           # Accepted format contracts
+│   ├── imageConverter.ts    # Canvas pipeline
+│   └── ffmpegEngine.ts      # FFmpeg queue and commands
+├── App.tsx
+└── main.tsx
 ```
 
----
+## Commands
 
-## Licence
+| Command | Purpose |
+| --- | --- |
+| `npm run dev` | Start local-only development on port 2499. |
+| `npm run dev:lan` | Expose development to the local network. |
+| `npm test` | Run the Vitest suite. |
+| `npm run lint` | Run TypeScript and ESLint checks. |
+| `npm run build` | Build the app and copy the FFmpeg core into `dist/ffmpeg/`. |
+| `npm run build:demo` | Build the isolated Vercel demo with `noindex`. |
 
-MIT pour le code SwissKnife. Le moteur FFmpeg WASM a ses propres obligations — [NOTICE.md](NOTICE.md).
+## Public demo
 
-Contributions : [CONTRIBUTING.md](CONTRIBUTING.md). Conduite : [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+The [public demo](https://demo.swissknife.lucas-homelab.fr) is built from the same application. It remains browser-only, displays an explicit demo marker, and applies the headers required by FFmpeg WASM. See [DEMO.md](DEMO.md) for the deployment and validation contract.
+
+## Contributing and license
+
+Contributions are welcome through [CONTRIBUTING.md](CONTRIBUTING.md) and governed by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+SwissKnife's source code is available under the [MIT License](LICENSE). FFmpeg WASM and its compiled components retain their own notices and obligations; see [NOTICE.md](NOTICE.md).
