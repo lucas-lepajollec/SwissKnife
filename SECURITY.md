@@ -1,21 +1,19 @@
-# Security Policy
+# Security policy
+
+SwissKnife converts media inside the visitor's browser. Reports that could expose user files, introduce an upload path, weaken the same-origin isolation required by FFmpeg WebAssembly, or compromise the dependency and container supply chain are especially important.
 
 ## Supported versions
 
-The `main` branch and the Git tag `v1.0.0` are the versions covered by this policy.
+Until the first deliberate public release, security fixes target `main`. After releases begin, this section will identify the supported release line explicitly.
 
 ## Reporting a vulnerability
 
-Email **lucaslepajollecweb@gmail.com** with enough detail to reproduce the issue.
+Use the repository's [private vulnerability reporting form](https://github.com/lucas-lepajollec/SwissKnife/security/advisories/new).
 
-Do not open a public GitHub issue for a vulnerability that could expose user files or weaken the “no upload” guarantee.
+If private reporting is unavailable, open a minimal public issue asking for a private contact channel. Do not include sample media, exploit code, credentials, or other sensitive details in that issue.
 
-## What this app does not do
+Include the affected commit or image tag, clear reproduction steps, the expected impact, and a sanitized proof of concept when possible. You should receive an acknowledgement within seven days and an initial assessment within fourteen days.
 
-SwissKnife is a static frontend. It does not receive user media on a server. Conversions run in the visitor’s browser.
+## Self-hosted deployments
 
-The FFmpeg WebAssembly core is served **from the same origin** as the app (`/ffmpeg/`). User files stay in memory (`File` / `blob:`) and are downloaded locally.
-
-## Self-hosted instances
-
-Keep the Nginx security headers shipped in `nginx.conf` (COOP/COEP for WASM, CSP, frame denial). Do not proxy the app in a way that strips those headers if you still need FFmpeg WASM.
+Keep the security headers shipped in `nginx.conf`, including the COOP and COEP headers required by FFmpeg WebAssembly. Do not configure a proxy that strips them. SwissKnife should not require user media to leave the browser; any behavior that contradicts that promise should be reported privately.

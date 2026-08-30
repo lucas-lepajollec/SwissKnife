@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Quality
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies from lockfile
+        run: npm ci
+
+      - name: Lint and type-check
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build production and demo applications
+        run: |
+          npm run build
+          npm run build:demo
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
+  container:
+    name: Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Build container
+        run: docker build --tag swissknife:ci .

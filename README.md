@@ -147,6 +147,8 @@ The [public demo](https://demo.swissknife.lucas-homelab.fr) is built from the sa
 
 - [Documentation](https://docs.swissknife.lucas-homelab.fr)
 - [Contributing guide](CONTRIBUTING.md)
+- [Changelog](CHANGELOG.md)
 - [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security policy](SECURITY.md)
 - [MIT License](LICENSE)
 - [Third-party notices](NOTICE.md)
