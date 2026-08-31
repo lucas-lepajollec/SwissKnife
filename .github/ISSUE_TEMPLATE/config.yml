@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation and support
+    url: https://docs.swissknife.lucas-homelab.fr
+    about: Check format, browser and self-hosting guidance before opening an issue.
+  - name: Private security report
+    url: https://github.com/lucas-lepajollec/SwissKnife/security/advisories/new
+    about: Report vulnerabilities or unexpected upload behavior privately.
