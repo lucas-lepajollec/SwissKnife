@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="public/mark.png" alt="SwissKnife mark" width="112" height="112" />
+  <img src="public/logo.svg" alt="SwissKnife logo" width="112" height="112" />
   <h1>SwissKnife</h1>
   <p><strong>Local-first image, audio, and video conversion—directly in your browser.</strong></p>
   <p>Your files stay in the tab. No account. No conversion server.</p>
