@@ -5,3 +5,7 @@ coverage/
 .DS_Store
 *.log
 .env*
+
+# local private project context (never commit)
+AGENTS.override.md
+.project-local/
