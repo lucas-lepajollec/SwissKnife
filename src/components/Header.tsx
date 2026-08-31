@@ -12,7 +12,7 @@ export function Header({ loaded, loading, consoleVisible, onToggleConsole }: Hea
     <header className="w-full py-4 sm:py-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src="/logo.svg" alt="" width={44} height={44} className="w-[44px] h-[44px] shrink-0 drop-shadow-[0_0_12px_rgba(6,182,212,0.15)]" />
+          <img src="/logo.svg?v=2" alt="" width={44} height={44} className="w-[44px] h-[44px] shrink-0" />
           <div className="flex flex-col">
             <h1 className="text-lg font-bold text-white leading-none tracking-tight">SwissKnife</h1>
             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1 hidden sm:block">Convertisseur local</span>

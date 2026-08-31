@@ -1,16 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-  <title id="title">SwissKnife</title>
-  <desc id="desc">A centered S-shaped mark in silver, cyan and indigo on a dark rounded square.</desc>
-  <defs>
-    <linearGradient id="surface" x1="44" y1="34" x2="468" y2="478" gradientUnits="userSpaceOnUse"><stop stop-color="#202128"/><stop offset=".58" stop-color="#0D0E12"/><stop offset="1" stop-color="#050506"/></linearGradient>
-    <linearGradient id="metal" x1="171" y1="138" x2="350" y2="370" gradientUnits="userSpaceOnUse"><stop stop-color="#F7F8FA"/><stop offset=".34" stop-color="#C3C7D0"/><stop offset=".68" stop-color="#777D8C"/><stop offset="1" stop-color="#E7E9ED"/></linearGradient>
-    <linearGradient id="energy" x1="151" y1="336" x2="347" y2="163" gradientUnits="userSpaceOnUse"><stop stop-color="#45D6E9"/><stop offset=".48" stop-color="#748BEC"/><stop offset="1" stop-color="#B193F4" stop-opacity="0"/></linearGradient>
-    <filter id="shadow" x="64" y="72" width="384" height="377" filterUnits="userSpaceOnUse"><feDropShadow dx="0" dy="18" stdDeviation="16" flood-color="#000" flood-opacity=".72"/><feDropShadow dx="0" dy="0" stdDeviation="15" flood-color="#4EDBEA" flood-opacity=".2"/></filter>
-  </defs>
-  <rect x="16" y="16" width="480" height="480" rx="116" fill="url(#surface)"/>
-  <rect x="18" y="18" width="476" height="476" rx="114" fill="none" stroke="#FFF" stroke-opacity=".1" stroke-width="4"/>
-  <path d="M332 151H211c-36.45 0-66 29.55-66 66s29.55 66 66 66h91c17.67 0 32 14.33 32 32s-14.33 32-32 32H179" fill="none" stroke="#050506" stroke-linecap="round" stroke-linejoin="round" stroke-width="68" opacity=".72" transform="translate(0 10)"/>
-  <path d="M332 151H211c-36.45 0-66 29.55-66 66s29.55 66 66 66h91c17.67 0 32 14.33 32 32s-14.33 32-32 32H179" fill="none" stroke="url(#metal)" stroke-linecap="round" stroke-linejoin="round" stroke-width="60" filter="url(#shadow)"/>
-  <path d="M332 151H211c-36.45 0-66 29.55-66 66s29.55 66 66 66h91c17.67 0 32 14.33 32 32s-14.33 32-32 32H179" fill="none" stroke="url(#energy)" stroke-linecap="round" stroke-linejoin="round" stroke-width="60" opacity=".9"/>
-  <path d="M332 151H211c-36.45 0-66 29.55-66 66s29.55 66 66 66h91c17.67 0 32 14.33 32 32s-14.33 32-32 32H179" fill="none" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" opacity=".42"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <path d="M196 62H112C77 62 56 82 56 108C56 134 77 150 108 150H145" stroke="#45D6E9" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M60 194H144C179 194 200 174 200 148C200 122 179 106 148 106H111" stroke="#748BEC" stroke-width="28" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="196" cy="62" r="18" fill="#45D6E9"/>
+  <circle cx="60" cy="194" r="18" fill="#748BEC"/>
 </svg>
