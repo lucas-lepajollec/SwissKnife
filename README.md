@@ -45,15 +45,15 @@ The interface keeps the processing boundary visible: file intake, format selecti
 
 ### Docker Compose
 
-Create `docker-compose.yml`:
+The tracked Compose file pulls the published image, binds to loopback, drops all Linux capabilities, and keeps the container filesystem read-only:
 
 ```yaml
 services:
   swissknife:
-    image: ghcr.io/lucas-lepajollec/swissknife:latest
+    image: ${SWISSKNIFE_IMAGE:-ghcr.io/lucas-lepajollec/swissknife:latest}
     container_name: swissknife
     ports:
-      - "2501:8080"
+      - "${SWISSKNIFE_BIND_ADDRESS:-127.0.0.1}:2501:8080"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
@@ -65,6 +65,7 @@ services:
 
 ```bash
 docker compose up -d
+docker compose ps
 ```
 
 Open `http://localhost:2501`. To build the current checkout instead, use:
@@ -72,12 +73,12 @@ Open `http://localhost:2501`. To build the current checkout instead, use:
 ```bash
 git clone https://github.com/lucas-lepajollec/SwissKnife.git
 cd SwissKnife
-docker compose -f docker-compose.build.yml up -d --build
+docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
 ```
 
 ### Local development
 
-Requirements: Node.js 20 or newer and a modern browser with WebAssembly support.
+Requirements: Node.js 22 and a modern browser with WebAssembly support.
 
 ```bash
 git clone https://github.com/lucas-lepajollec/SwissKnife.git
@@ -87,6 +88,8 @@ npm run dev
 ```
 
 Open `http://127.0.0.1:2499`. Use `npm run dev:lan` only when deliberately testing on a trusted network.
+
+Set `SWISSKNIFE_BIND_ADDRESS=0.0.0.0` only for deliberate trusted-LAN exposure. Before an update, record the current digest, then run `docker compose pull && docker compose up -d` and verify health. Roll back by setting `SWISSKNIFE_IMAGE` to a previous version or `sha-<full-commit>` tag. `docker compose down` fully uninstalls the stateless service.
 
 ## Configuration and persistence
 

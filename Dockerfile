@@ -1,10 +1,10 @@
 # ============================================
 # SwissKnife — Dockerfile (multi-stage)
-# Stage 1: Node 20 build
+# Stage 1: Node 22 build
 # Stage 2: nginx unprivileged on 8080
 # ============================================
 
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
