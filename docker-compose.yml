@@ -3,11 +3,20 @@
 
 services:
   swissknife:
-    image: ghcr.io/lucas-lepajollec/swissknife:latest
+    image: ${SWISSKNIFE_IMAGE:-ghcr.io/lucas-lepajollec/swissknife:latest}
     container_name: swissknife
     ports:
-      - "2501:8080"
+      - "${SWISSKNIFE_BIND_ADDRESS:-127.0.0.1}:2501:8080"
     restart: unless-stopped
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+      - /var/cache/nginx:size=16m,uid=101,gid=101
+      - /var/run:size=1m,uid=101,gid=101
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
       interval: 30s
