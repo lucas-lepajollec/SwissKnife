@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { Terminal, ChevronUp, ChevronDown, Info, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useI18n } from '@/i18n';
 
 export interface Log {
   id: string;
@@ -17,6 +18,7 @@ interface DebugConsoleProps {
 }
 
 export function DebugConsole({ logs, onClear, visible, onToggleVisible }: DebugConsoleProps) {
+  const { copy, locale } = useI18n();
   const [isExpanded, setIsExpanded] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -46,24 +48,24 @@ export function DebugConsole({ logs, onClear, visible, onToggleVisible }: DebugC
           >
             <div className="flex items-center gap-2 text-xs font-mono text-gray-300">
               <Terminal size={14} />
-              <span>CONSOLE FFMPEG</span>
+              <span>{copy.console.title}</span>
               <span className="flex items-center gap-1 px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px]">
                 <Info size={10} />
-                {logs.length} logs
+                {logs.length} {copy.console.logs}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={(e) => { e.stopPropagation(); onClear(); }}
                 className="p-1 rounded hover:bg-white/10 text-gray-500 hover:text-red-400 transition-colors"
-                title="Vider les logs"
+                title={copy.console.clear}
               >
                 <Trash2 size={12} />
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); onToggleVisible(false); }}
                 className="p-1 rounded hover:bg-white/10 text-gray-500 hover:text-gray-300 transition-colors text-[10px] font-medium"
-                title="Masquer la console"
+                title={copy.console.hide}
               >
                 ✕
               </button>
@@ -78,7 +80,7 @@ export function DebugConsole({ logs, onClear, visible, onToggleVisible }: DebugC
           >
             {logs.length === 0 ? (
               <div className="flex items-center gap-2 text-gray-600">
-                <span>En attente de logs FFmpeg...</span>
+                <span>{copy.console.waiting}</span>
               </div>
             ) : (
               logs.map((log) => (
@@ -103,7 +105,7 @@ export function DebugConsole({ logs, onClear, visible, onToggleVisible }: DebugC
             )}
             {logs.length > 0 && (
               <div className="flex items-start gap-3 animate-pulse opacity-50">
-                <span className="text-gray-600">[{new Date().toLocaleTimeString('fr-FR', { hour12: false })}]</span>
+                <span className="text-gray-600">[{new Date().toLocaleTimeString(locale === 'fr' ? 'fr-FR' : 'en-US', { hour12: false })}]</span>
                 <span className="text-gray-500">_</span>
               </div>
             )}

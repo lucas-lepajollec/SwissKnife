@@ -20,7 +20,7 @@ const QUALITY_MAP: Record<string, number> = {
 const CANVAS_OUTPUTS = new Set(['jpg', 'jpeg', 'png', 'webp']);
 
 export class ConversionCancelledError extends Error {
-    constructor(message = 'Conversion annulée') {
+    constructor(message = messages.en.engine.cancelled) {
         super(message);
         this.name = 'ConversionCancelledError';
     }
@@ -39,11 +39,12 @@ export async function convertImageCanvas(
     outputFormat: string,
     onProgress?: (pct: number) => void,
     signal?: AbortSignal,
+    copy: Messages['engine'] = messages.en.engine,
 ): Promise<CanvasConvertResult> {
     throwIfAborted(signal);
     const format = outputFormat.toLowerCase();
     if (!CANVAS_OUTPUTS.has(format)) {
-        throw new Error(`Sortie image non supportée : ${format.toUpperCase()}. Utilisez JPG, PNG ou WEBP.`);
+        throw new Error(copy.unsupportedImage(format.toUpperCase()));
     }
 
     const ext = file.name.split('.').pop()?.toLowerCase() ?? '';
@@ -51,7 +52,7 @@ export async function convertImageCanvas(
 
     const imgUrl = URL.createObjectURL(file);
     try {
-        const img = await loadImage(imgUrl, signal);
+        const img = await loadImage(imgUrl, signal, copy);
         throwIfAborted(signal);
         onProgress?.(40);
 
@@ -59,7 +60,7 @@ export async function convertImageCanvas(
         canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight;
         const ctx = canvas.getContext('2d');
-        if (!ctx) throw new Error('Impossible de créer un contexte Canvas 2D');
+        if (!ctx) throw new Error(copy.canvasUnavailable);
 
         if (format === 'jpg' || format === 'jpeg') {
             ctx.fillStyle = '#FFFFFF';
@@ -76,7 +77,7 @@ export async function convertImageCanvas(
             canvas.toBlob(
                 (b) => {
                     if (b) resolve(b);
-                    else reject(new Error(`Échec de l'export en ${format.toUpperCase()}`));
+                    else reject(new Error(copy.exportFailed(format.toUpperCase())));
                 },
                 mimeType,
                 quality,
@@ -88,10 +89,10 @@ export async function convertImageCanvas(
     } catch (err) {
         if (err instanceof ConversionCancelledError) throw err;
         if (ext === 'tif' || ext === 'tiff') {
-            throw new Error('Ce navigateur ne peut pas lire le TIFF. Exportez d’abord en PNG ou JPG.', { cause: err });
+            throw new Error(copy.tiffUnsupported, { cause: err });
         }
         if (err instanceof Error && err.message.includes('charger')) {
-            throw new Error(`Impossible de lire cette image (${ext || 'format inconnu'}).`, { cause: err });
+            throw new Error(copy.unreadableImage(ext), { cause: err });
         }
         throw err;
     } finally {
@@ -99,7 +100,7 @@ export async function convertImageCanvas(
     }
 }
 
-function loadImage(src: string, signal?: AbortSignal): Promise<HTMLImageElement> {
+function loadImage(src: string, signal: AbortSignal | undefined, copy: Messages['engine']): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
         const img = new Image();
         const onAbort = () => {
@@ -117,8 +118,9 @@ function loadImage(src: string, signal?: AbortSignal): Promise<HTMLImageElement>
         };
         img.onerror = () => {
             signal?.removeEventListener('abort', onAbort);
-            reject(new Error('Impossible de charger l\'image'));
+            reject(new Error(copy.imageLoadFailed));
         };
         img.src = src;
     });
 }
+import { messages, type Messages } from '@/i18n';

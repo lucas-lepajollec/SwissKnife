@@ -17,6 +17,7 @@ import {
   SIZE_WARNING_BYTES,
 } from '@/lib/formats';
 import { ConversionCancelledError } from '@/lib/imageConverter';
+import { useI18n } from '@/i18n';
 
 export interface QueueFile {
   id: string;
@@ -39,6 +40,7 @@ let fileIdCounter = 0;
 let bannerIdCounter = 0;
 
 export default function App() {
+  const { copy } = useI18n();
   const [queue, setQueue] = useState<QueueFile[]>([]);
   const [consoleVisible, setConsoleVisible] = useState(false);
   const [banners, setBanners] = useState<BannerMessage[]>([]);
@@ -85,13 +87,13 @@ export default function App() {
     }
 
     if (rejected.length > 0) {
-      pushBanner(`Fichier${rejected.length > 1 ? 's' : ''} refusé${rejected.length > 1 ? 's' : ''} (type non géré) : ${rejected.join(', ')}`);
+      pushBanner(copy.banners.rejected(rejected));
     }
     if (bulky.length > 0) {
-      pushBanner(`Fichier volumineux : ${bulky.join(', ')}. La conversion peut saturer la mémoire de l’onglet.`);
+      pushBanner(copy.banners.large(bulky));
     }
     if (accepted.length > 0) setQueue((prev) => [...prev, ...accepted]);
-  }, [pushBanner]);
+  }, [copy, pushBanner]);
 
   const handleFormatChange = useCallback((id: string, format: string) => {
     setQueue((prev) => prev.map((f) => f.id === id ? { ...f, selectedFormat: format } : f));

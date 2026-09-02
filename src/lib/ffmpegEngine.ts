@@ -2,6 +2,7 @@ import { FFmpeg } from '@ffmpeg/ffmpeg';
 import { fetchFile, toBlobURL } from '@ffmpeg/util';
 import { ConversionCancelledError } from '@/lib/imageConverter';
 import { buildFFmpegArgs, detectFileCategory, outputMimeType, type FileCategory } from '@/lib/formats';
+import { messages, type Messages } from '@/i18n';
 
 const LOAD_TIMEOUT_MS = 120_000;
 const CORE_BASE = '/ffmpeg';
@@ -18,6 +19,11 @@ let loadPromise: Promise<FFmpeg> | null = null;
 let jobChain: Promise<unknown> = Promise.resolve();
 let listeners: Listeners | null = null;
 let eventsBound = false;
+let copy: Messages['engine'] = messages.en.engine;
+
+export function setFFmpegCopy(next: Messages['engine']): void {
+    copy = next;
+}
 
 function sanitizeFilename(name: string): string {
     return name
@@ -69,7 +75,7 @@ export async function loadFFmpeg(): Promise<FFmpeg> {
     if (loadPromise) return loadPromise;
 
     loadPromise = (async () => {
-        listeners?.onLog('info', 'Chargement du moteur FFmpeg WASM (copie locale)…');
+        listeners?.onLog('info', copy.loadingEngine);
         const ffmpeg = new FFmpeg();
         bindEvents(ffmpeg);
         const origin = window.location.origin;
@@ -79,10 +85,10 @@ export async function loadFFmpeg(): Promise<FFmpeg> {
                 wasmURL: await toBlobURL(`${origin}${CORE_BASE}/ffmpeg-core.wasm`, 'application/wasm'),
             }),
             LOAD_TIMEOUT_MS,
-            'Le moteur FFmpeg n’a pas pu être chargé (délai dépassé). Vérifiez la connexion ou réessayez.',
+            copy.engineTimeout,
         );
         instance = ffmpeg;
-        listeners?.onLog('success', 'Moteur FFmpeg prêt (copie locale, un seul thread).');
+        listeners?.onLog('success', copy.engineReady);
         return ffmpeg;
     })();
 
@@ -93,7 +99,7 @@ export async function loadFFmpeg(): Promise<FFmpeg> {
         instance = null;
         eventsBound = false;
         const message = err instanceof Error ? err.message : String(err);
-        listeners?.onLog('error', `Échec du chargement FFmpeg : ${message}`);
+        listeners?.onLog('error', copy.engineLoadFailed(message));
         throw err;
     }
 }
@@ -134,7 +140,7 @@ export async function convertWithFFmpeg(
 ): Promise<{ blobUrl: string; outputName: string }> {
     const category: FileCategory = detectFileCategory(file);
     if (category !== 'video' && category !== 'audio') {
-        throw new Error('FFmpeg n’est utilisé que pour l’audio et la vidéo.');
+        throw new Error(copy.mediaOnly);
     }
 
     return enqueue(async () => {
@@ -161,15 +167,15 @@ export async function convertWithFFmpeg(
             const safeInput = sanitizeFilename(originalName);
             const safeOutput = sanitizeFilename(`${baseName}.${outputFormat}`);
 
-            listeners?.onLog('info', `Début de conversion : ${originalName} → ${outputFormat.toUpperCase()}`);
+            listeners?.onLog('info', copy.conversionStart(originalName, outputFormat.toUpperCase()));
             const fileData = await fetchFile(file);
             if (options.signal?.aborted) throw new ConversionCancelledError();
 
             await ffmpeg.writeFile(safeInput, fileData);
-            listeners?.onLog('info', `Fichier chargé en mémoire (${(file.size / 1024 / 1024).toFixed(2)} Mo)`);
+            listeners?.onLog('info', copy.fileLoaded((file.size / 1024 / 1024).toFixed(2)));
 
             const args = buildFFmpegArgs(safeInput, safeOutput, outputFormat, category);
-            listeners?.onLog('info', `Commande : ffmpeg ${args.join(' ')}`);
+            listeners?.onLog('info', copy.command(`ffmpeg ${args.join(' ')}`));
 
             const abort = () => {
                 void terminateFFmpeg();
@@ -189,7 +195,7 @@ export async function convertWithFFmpeg(
             try { await ffmpeg.deleteFile(safeInput); } catch { /* ignore */ }
             try { await ffmpeg.deleteFile(safeOutput); } catch { /* ignore */ }
 
-            listeners?.onLog('success', `Conversion terminée : ${outputDisplayName}`);
+            listeners?.onLog('success', copy.conversionDone(outputDisplayName));
             return { blobUrl: URL.createObjectURL(blob), outputName: outputDisplayName };
         } catch (err) {
             if (options.signal?.aborted || (err instanceof Error && err.message.includes('terminate'))) {
