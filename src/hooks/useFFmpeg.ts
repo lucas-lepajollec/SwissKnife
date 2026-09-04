@@ -4,11 +4,13 @@ import {
     convertWithFFmpeg,
     isFFmpegLoaded,
     loadFFmpeg,
+    setFFmpegCopy,
     setFFmpegListeners,
     terminateFFmpeg,
 } from '@/lib/ffmpegEngine';
 import { detectFileCategory, fileBaseName, needsFFmpeg } from '@/lib/formats';
 import { ConversionCancelledError, convertImageCanvas } from '@/lib/imageConverter';
+import { useI18n } from '@/i18n';
 
 export interface ConvertResult {
     blobUrl: string;
@@ -22,6 +24,7 @@ export interface ConvertOptions {
 }
 
 export function useFFmpeg() {
+    const { copy, locale } = useI18n();
     const [loaded, setLoaded] = useState(() => isFFmpegLoaded());
     const [loading, setLoading] = useState(false);
     const [logs, setLogs] = useState<Log[]>([]);
@@ -31,16 +34,17 @@ export function useFFmpeg() {
 
     const addLog = useCallback((type: Log['type'], message: string) => {
         const id = String(++logIdRef.current);
-        const timestamp = new Date().toLocaleTimeString('fr-FR', { hour12: false });
+        const timestamp = new Date().toLocaleTimeString(locale === 'fr' ? 'fr-FR' : 'en-US', { hour12: false });
         setLogs((prev) => [...prev, { id, type, message, timestamp }]);
-    }, []);
+    }, [locale]);
 
     useEffect(() => {
+        setFFmpegCopy(copy.engine);
         setFFmpegListeners({
             onLog: addLog,
             onProgress: (pct) => progressRef.current(pct),
         });
-    }, [addLog]);
+    }, [addLog, copy.engine]);
 
     const load = useCallback(async () => {
         if (isFFmpegLoaded()) {
@@ -67,19 +71,20 @@ export function useFFmpeg() {
         const outputDisplayName = `${baseName}.${outputFormat}`;
 
         if (category === 'image') {
-            addLog('info', `Conversion image (Canvas) : ${file.name} → ${outputFormat.toUpperCase()}`);
+            addLog('info', copy.engine.imageStart(file.name, outputFormat.toUpperCase()));
             const result = await convertImageCanvas(
                 file,
                 outputFormat,
                 options.onProgress,
                 options.signal,
+                copy.engine,
             );
-            addLog('success', `Conversion terminée : ${outputDisplayName}`);
+            addLog('success', copy.engine.conversionDone(outputDisplayName));
             return { blobUrl: result.blobUrl, outputName: outputDisplayName };
         }
 
         if (!needsFFmpeg(category)) {
-            throw new Error('Type de fichier non convertible.');
+            throw new Error(copy.engine.fileNotConvertible);
         }
 
         progressRef.current = options.onProgress ?? (() => undefined);
@@ -95,9 +100,9 @@ export function useFFmpeg() {
         } catch (err) {
             const message = err instanceof Error ? err.message : String(err);
             if (!(err instanceof ConversionCancelledError)) {
-                addLog('error', `Erreur de conversion : ${message}`);
+                addLog('error', copy.engine.conversionError(message));
             } else {
-                addLog('warning', 'Conversion annulée.');
+                addLog('warning', copy.engine.cancelled);
             }
             throw err;
         } finally {
@@ -105,7 +110,7 @@ export function useFFmpeg() {
             setLoading(false);
             progressRef.current = () => undefined;
         }
-    }, [addLog]);
+    }, [addLog, copy.engine]);
 
     const cancelMediaEngine = useCallback(async () => {
         await terminateFFmpeg();

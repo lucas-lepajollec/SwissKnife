@@ -1,6 +1,8 @@
 import { Cpu, Lock, ShieldCheck, WifiOff } from 'lucide-react';
+import { useI18n } from '@/i18n';
 
 export function PrivacyCard() {
+  const { copy } = useI18n();
   return (
     <div className="relative h-full min-h-[200px] lg:min-h-0 w-full rounded-3xl border border-white/10 bg-[#0A0A0A] p-6 sm:p-8 overflow-hidden">
       <div className="absolute top-0 right-0 -mr-16 -mt-16 h-64 w-64 rounded-full bg-cyan-500/5 blur-3xl" />
@@ -12,27 +14,25 @@ export function PrivacyCard() {
 
           <div className="flex-1">
             <h2 className="text-lg lg:text-2xl font-semibold text-white mb-2 lg:mb-4 tracking-tight">
-              Vie privée
+              {copy.privacy.title}
             </h2>
 
             <p className="text-gray-300 text-xs sm:text-sm leading-relaxed mb-3 lg:mb-6">
-              Les médias sont traités <span className="text-white font-medium">dans votre navigateur</span>
-              {' '}(Canvas pour les images, FFmpeg WASM pour l’audio et la vidéo).
-              Rien n’est envoyé sur un serveur.
+              {copy.privacy.beforeBrowser}<span className="text-white font-medium">{copy.privacy.browser}</span>{copy.privacy.afterBrowser}
             </p>
 
             <ul className="flex flex-wrap gap-2 lg:flex-col lg:gap-3">
               <li className="flex items-center gap-2 lg:gap-3 text-[10px] lg:text-xs text-gray-300 bg-white/5 lg:bg-transparent rounded-full lg:rounded-none px-2.5 py-1 lg:p-0">
                 <Cpu className="h-3 w-3 lg:h-4 lg:w-4 shrink-0" aria-hidden="true" />
-                <span>CPU local</span>
+                <span>{copy.privacy.localCpu}</span>
               </li>
               <li className="flex items-center gap-2 lg:gap-3 text-[10px] lg:text-xs text-gray-300 bg-white/5 lg:bg-transparent rounded-full lg:rounded-none px-2.5 py-1 lg:p-0">
                 <WifiOff className="h-3 w-3 lg:h-4 lg:w-4 shrink-0" aria-hidden="true" />
-                <span>Aucun envoi de vos fichiers</span>
+                <span>{copy.privacy.noUpload}</span>
               </li>
               <li className="flex items-center gap-2 lg:gap-3 text-[10px] lg:text-xs text-gray-300 bg-white/5 lg:bg-transparent rounded-full lg:rounded-none px-2.5 py-1 lg:p-0">
                 <ShieldCheck className="h-3 w-3 lg:h-4 lg:w-4 shrink-0" aria-hidden="true" />
-                <span>Moteur FFmpeg servi par cette app</span>
+                <span>{copy.privacy.localEngine}</span>
               </li>
             </ul>
           </div>

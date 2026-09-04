@@ -2,12 +2,14 @@ import { useReducedMotion } from 'motion/react';
 import { motion } from 'motion/react';
 import { useCallback, useRef, useState, type ChangeEvent, type DragEvent, type KeyboardEvent } from 'react';
 import { Image as ImageIcon, Music, Upload, Video } from 'lucide-react';
+import { useI18n } from '@/i18n';
 
 interface DropzoneProps {
   onFilesAdded: (files: File[]) => void;
 }
 
 export function Dropzone({ onFilesAdded }: DropzoneProps) {
+  const { copy } = useI18n();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const reduceMotion = useReducedMotion();
@@ -45,7 +47,7 @@ export function Dropzone({ onFilesAdded }: DropzoneProps) {
     <div
       role="button"
       tabIndex={0}
-      aria-label="Déposer ou parcourir des fichiers audio, vidéo ou image"
+      aria-label={copy.dropzone.aria}
       className={`relative h-full min-h-[400px] w-full rounded-3xl border border-dashed bg-[#0A0A0A] p-8 transition-colors group overflow-hidden cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-400
         ${isDragOver ? 'border-cyan-500/50 bg-cyan-500/5' : 'border-white/15 hover:bg-white/[0.02]'}`}
       onDrop={handleDrop}
@@ -68,9 +70,9 @@ export function Dropzone({ onFilesAdded }: DropzoneProps) {
       <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
         <div className="flex gap-4 mb-8">
           {[
-            { icon: Music, color: "text-blue-400", bg: "bg-blue-400/10", label: "Audio" },
-            { icon: Video, color: "text-purple-400", bg: "bg-purple-400/10", label: "Vidéo" },
-            { icon: ImageIcon, color: "text-emerald-400", bg: "bg-emerald-400/10", label: "Image" },
+            { icon: Music, color: "text-blue-400", bg: "bg-blue-400/10", label: copy.dropzone.audio },
+            { icon: Video, color: "text-purple-400", bg: "bg-purple-400/10", label: copy.dropzone.video },
+            { icon: ImageIcon, color: "text-emerald-400", bg: "bg-emerald-400/10", label: copy.dropzone.image },
           ].map((item, i) => (
             <motion.div
               key={item.label}
@@ -86,16 +88,16 @@ export function Dropzone({ onFilesAdded }: DropzoneProps) {
         </div>
 
         <h2 className="text-2xl font-semibold text-white mb-2 tracking-tight">
-          {isDragOver ? 'Lâchez pour ajouter' : 'Déposez vos fichiers'}
+          {isDragOver ? copy.dropzone.release : copy.dropzone.title}
         </h2>
         <p className="text-gray-300 mb-8 max-w-md text-sm leading-relaxed">
-          Audio, vidéo ou image. Les fichiers restent dans votre navigateur.
+          {copy.dropzone.body}
         </p>
 
         <span
           className="group/btn relative inline-flex items-center justify-center rounded-full bg-white/5 px-8 py-3 text-xs font-semibold uppercase tracking-widest text-white transition-colors hover:bg-white/10 border border-white/15"
         >
-          <span className="mr-2">Ou cliquez pour parcourir</span>
+          <span className="mr-2">{copy.dropzone.browse}</span>
           <Upload className="h-4 w-4 opacity-50" aria-hidden="true" />
         </span>
       </div>
