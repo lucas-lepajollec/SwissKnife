@@ -1,4 +1,4 @@
-import { Loader2, Terminal } from 'lucide-react';
+import { ChevronDown, Loader2, Terminal } from 'lucide-react';
 import { useI18n, type Locale } from '@/i18n';
 
 interface HeaderProps {
@@ -10,18 +10,6 @@ interface HeaderProps {
 
 export function Header({ loaded, loading, consoleVisible, onToggleConsole }: HeaderProps) {
   const { copy, locale, setLocale } = useI18n();
-
-  const languageButton = (value: Locale, label: string) => (
-    <button
-      type="button"
-      onClick={() => setLocale(value)}
-      aria-pressed={locale === value}
-      title={label}
-      className={`rounded-full px-2 py-1 text-[10px] font-semibold tracking-wide transition-colors ${locale === value ? 'bg-white text-black' : 'text-gray-400 hover:text-white'}`}
-    >
-      {value.toUpperCase()}
-    </button>
-  );
 
   return (
     <header className="w-full py-4 sm:py-6">
@@ -40,20 +28,18 @@ export function Header({ loaded, loading, consoleVisible, onToggleConsole }: Hea
               {copy.header.demo}
             </span>
           )}
-          <div className="hidden sm:flex items-center rounded-full bg-[#111] border border-white/10 p-0.5" aria-label={copy.language.label}>
-            {languageButton('en', copy.language.english)}
-            {languageButton('fr', copy.language.french)}
-            {languageButton('es', copy.language.spanish)}
-            {languageButton('de', copy.language.german)}
-          </div>
-          <select
-            value={locale}
-            onChange={(event) => setLocale(event.target.value as Locale)}
-            aria-label={copy.language.label}
-            className="sm:hidden h-8 rounded-full border border-white/10 bg-[#111] px-2 text-[10px] font-semibold text-white focus:border-cyan-400 focus:outline-none"
-          >
-            <option value="en">EN</option><option value="fr">FR</option><option value="es">ES</option><option value="de">DE</option>
-          </select>
+          <label className="relative inline-flex h-8 items-center">
+            <span className="sr-only">{copy.language.label}</span>
+            <select
+              value={locale}
+              onChange={(event) => setLocale(event.target.value as Locale)}
+              aria-label={copy.language.label}
+              className="h-8 min-w-[64px] appearance-none rounded-full border border-white/10 bg-[#111] pl-3 pr-8 text-[10px] font-semibold tracking-wide text-white transition-colors hover:border-white/20 focus:border-cyan-400 focus:outline-none"
+            >
+              <option value="en">EN</option><option value="fr">FR</option><option value="es">ES</option><option value="de">DE</option>
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-2.5 h-3 w-3 text-gray-400" aria-hidden="true" />
+          </label>
           <div className="hidden md:flex items-center gap-2 rounded-full bg-[#111] border border-white/10 px-3 py-1.5" aria-live="polite">
             {loading ? (
               <>
