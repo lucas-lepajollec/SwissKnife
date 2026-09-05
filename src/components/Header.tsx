@@ -23,11 +23,6 @@ export function Header({ loaded, loading, consoleVisible, onToggleConsole }: Hea
         </div>
 
         <div className="flex items-center gap-2 sm:gap-3">
-          {import.meta.env.VITE_DEMO === 'true' && (
-            <span className="hidden md:inline-flex rounded-full border border-cyan-500/30 bg-cyan-500/10 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wide text-cyan-300">
-              {copy.header.demo}
-            </span>
-          )}
           <label className="relative inline-flex h-8 items-center">
             <span className="sr-only">{copy.language.label}</span>
             <select

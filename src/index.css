@@ -11,6 +11,18 @@
   }
 }
 
+.lh-demo-dialog:modal {
+  margin: auto;
+}
+
+.lh-demo-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+#lh-demo-title:focus {
+  outline: none;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
