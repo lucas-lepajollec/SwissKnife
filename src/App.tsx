@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Header } from '@/components/Header';
+import { DemoExperience } from '@/components/DemoExperience';
 import { Dropzone } from '@/components/Dropzone';
 import { PrivacyCard } from '@/components/PrivacyCard';
 import { FileQueue } from '@/components/FileQueue';
@@ -238,6 +239,7 @@ export default function App() {
       </main>
 
       <DebugConsole logs={logs} onClear={clearLogs} visible={consoleVisible} onToggleVisible={setConsoleVisible} />
+      {import.meta.env.VITE_DEMO === 'true' && <DemoExperience />}
     </div>
   );
 }
