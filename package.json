@@ -1,7 +1,7 @@
 {
   "name": "swissknife",
   "private": true,
-  "version": "1.0.0",
+  "version": "0.1.0",
   "type": "module",
   "engines": {
     "node": "22.x"
@@ -16,6 +16,7 @@
     "clean": "node -e \"import('node:fs').then(fs => fs.rmSync('dist', { recursive: true, force: true }))\"",
     "lint": "tsc --noEmit && eslint src vite.config.ts",
     "typecheck": "tsc --noEmit",
+    "check:version": "node scripts/check-version.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },

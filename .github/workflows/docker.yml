@@ -38,6 +38,7 @@ jobs:
       - name: Validate source
         run: |
           npm ci
+          npm run check:version
           npm run lint
           npm run test
           npm run build
