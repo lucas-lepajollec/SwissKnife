@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- Compose uses Docker's standard all-interface port mapping by default. Use `127.0.0.1:2501:8080` for localhost-only publication.
+
 ## [0.1.0] - 2026-09-06
 
 ### Added
