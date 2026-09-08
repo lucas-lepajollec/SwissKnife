@@ -45,7 +45,7 @@ The interface keeps the processing boundary visible: file intake, format selecti
 
 ### Docker Compose
 
-The tracked Compose file pulls the published image, binds to loopback, drops all Linux capabilities, and keeps the container filesystem read-only:
+The tracked Compose file pulls the published image, publishes the host port on all interfaces, drops all Linux capabilities, and keeps the container filesystem read-only:
 
 ```yaml
 services:
@@ -53,7 +53,7 @@ services:
     image: ${SWISSKNIFE_IMAGE:-ghcr.io/lucas-lepajollec/swissknife:latest}
     container_name: swissknife
     ports:
-      - "${SWISSKNIFE_BIND_ADDRESS:-127.0.0.1}:2501:8080"
+      - "2501:8080"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
@@ -89,7 +89,7 @@ npm run dev
 
 Open `http://127.0.0.1:2499`. Use `npm run dev:lan` only when deliberately testing on a trusted network.
 
-Set `SWISSKNIFE_BIND_ADDRESS=0.0.0.0` only for deliberate trusted-LAN exposure. Before an update, record the current digest, then run `docker compose pull && docker compose up -d` and verify health. Roll back by setting `SWISSKNIFE_IMAGE` to a previous version or `sha-<full-commit>` tag. `docker compose down` fully uninstalls the stateless service.
+Docker publishes the port on the host interfaces by default. Use `127.0.0.1:2501:8080` for localhost-only publication. Before an update, record the current digest, then run `docker compose pull && docker compose up -d` and verify health. Roll back by setting `SWISSKNIFE_IMAGE` to a previous version or `sha-<full-commit>` tag. `docker compose down` fully uninstalls the stateless service.
 
 ## Configuration and persistence
 
