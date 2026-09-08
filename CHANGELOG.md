@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-09-08
+
+### Changed
+
+- Make the default Compose file directly reference the published GHCR image, without an unnecessary image-override expression.
+
 ## [0.1.2] - 2026-09-08
 
 ### Changed
@@ -35,7 +41,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 Earlier development remains available in Git history; this changelog does not invent releases that were never deliberately published.
 
-[Unreleased]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/lucas-lepajollec/SwissKnife/releases/tag/v0.1.0
