@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- Let Docker Compose derive the stack and container names instead of imposing a fixed global container name.
+
 ## [0.1.3] - 2026-09-08
 
 ### Changed
@@ -16,7 +20,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
-- Use the established port `2501` both on the NAS and inside the container, and reduce the default Compose file to the settings required to run the image.
+- Use the established port `2501` both on the Docker host and inside the container, and reduce the default Compose file to the settings required to run the image.
 
 ## [0.1.1] - 2026-09-08
 
