@@ -6,9 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-08
+
 ### Changed
 
 - Compose uses Docker's standard all-interface port mapping by default. Use `127.0.0.1:2501:8080` for localhost-only publication.
+- No application configuration or data migration is required; operators recreating an existing container should review the new LAN-reachable port default.
 
 ## [0.1.0] - 2026-09-06
 
@@ -26,5 +29,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 Earlier development remains available in Git history; this changelog does not invent releases that were never deliberately published.
 
-[Unreleased]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/lucas-lepajollec/SwissKnife/releases/tag/v0.1.0
