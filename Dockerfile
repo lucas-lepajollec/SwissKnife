@@ -1,7 +1,7 @@
 # ============================================
 # SwissKnife — Dockerfile (multi-stage)
 # Stage 1: Node 22 build
-# Stage 2: nginx unprivileged on 8080
+# Stage 2: nginx unprivileged on the project port
 # ============================================
 
 FROM node:22-alpine AS builder
@@ -27,9 +27,9 @@ COPY --from=builder /app/dist /usr/share/nginx/html
 RUN chown -R nginx:nginx /usr/share/nginx/html
 USER nginx
 
-EXPOSE 8080
+EXPOSE 2501
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-  CMD wget -qO- http://127.0.0.1:8080/ >/dev/null || exit 1
+  CMD wget -qO- http://127.0.0.1:2501/ >/dev/null || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]

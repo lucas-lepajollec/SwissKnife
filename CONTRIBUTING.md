@@ -29,7 +29,7 @@ only when testing from another device on a trusted local network.
 docker compose -f docker-compose.yml -f docker-compose.build.yml up -d --build
 ```
 
-App URL: `http://localhost:2501` (host 2501 → container 8080).
+App URL: `http://localhost:2501` (host 2501 → container 2501).
 
 ## Checks before a pull request
 
