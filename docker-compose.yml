@@ -3,7 +3,7 @@
 
 services:
   swissknife:
-    image: ${SWISSKNIFE_IMAGE:-ghcr.io/lucas-lepajollec/swissknife:latest}
+    image: ghcr.io/lucas-lepajollec/swissknife:latest
     container_name: swissknife
     ports:
       - "2501:2501"

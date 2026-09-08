@@ -50,7 +50,7 @@ The tracked Compose file is intentionally small and pulls the published image:
 ```yaml
 services:
   swissknife:
-    image: ${SWISSKNIFE_IMAGE:-ghcr.io/lucas-lepajollec/swissknife:latest}
+    image: ghcr.io/lucas-lepajollec/swissknife:latest
     container_name: swissknife
     ports:
       - "2501:2501"
@@ -83,7 +83,7 @@ npm run dev
 
 Open `http://127.0.0.1:2499`. Use `npm run dev:lan` only when deliberately testing on a trusted network.
 
-Before an update, record the current digest, then run `docker compose pull && docker compose up -d --force-recreate` and verify health. Roll back by setting `SWISSKNIFE_IMAGE` to a previous version or `sha-<full-commit>` tag. `docker compose down` fully uninstalls the stateless service.
+Before an update, record the current digest, then run `docker compose pull && docker compose up -d --force-recreate` and verify health. Roll back by changing the Compose `image:` line to a previous version or `sha-<full-commit>` tag. `docker compose down` fully uninstalls the stateless service.
 
 ## Configuration and persistence
 
