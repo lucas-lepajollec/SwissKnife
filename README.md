@@ -51,7 +51,6 @@ The tracked Compose file is intentionally small and pulls the published image:
 services:
   swissknife:
     image: ghcr.io/lucas-lepajollec/swissknife:latest
-    container_name: swissknife
     ports:
       - "2501:2501"
     restart: unless-stopped
@@ -62,7 +61,7 @@ docker compose up -d
 docker compose ps
 ```
 
-Open `http://<server-ip>:2501` from your LAN, or `http://localhost:2501` on the Docker host. SwissKnife uses port `2501` both on the NAS and inside the container. To build the current checkout instead, use:
+Open `http://<server-ip>:2501` from your LAN, or `http://localhost:2501` on the Docker host. SwissKnife uses port `2501` both on the Docker host and inside the container. To build the current checkout instead, use:
 
 ```bash
 git clone https://github.com/lucas-lepajollec/SwissKnife.git
