@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-09-08
+
+### Changed
+
+- Use the established port `2501` both on the NAS and inside the container, and reduce the default Compose file to the settings required to run the image.
+
 ## [0.1.1] - 2026-09-08
 
 ### Changed
@@ -29,6 +35,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 Earlier development remains available in Git history; this changelog does not invent releases that were never deliberately published.
 
-[Unreleased]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/lucas-lepajollec/SwissKnife/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/lucas-lepajollec/SwissKnife/releases/tag/v0.1.0
