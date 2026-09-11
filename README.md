@@ -27,9 +27,13 @@ That boundary is the product: media is represented by browser `File` and `blob:`
 
 ## Product preview
 
-<img src="docs/assets/screenshots/swissknife-demo.png" alt="SwissKnife drop zone, privacy explanation, and conversion queue" width="1200" />
+The workspace below is the isolated public demo. Screenshots use the English interface with the demo intro dialog closed. Queue files are synthetic 1×1 PNGs generated for documentation, not visitor media.
+
+<img src="docs/assets/screenshots/swissknife-demo.png" alt="SwissKnife drop zone, privacy explanation, and empty conversion queue" width="1200" />
 
 The interface keeps the processing boundary visible: file intake, format selection, queue state, conversion progress, logs, and downloads stay in one local workspace.
+
+<img src="docs/assets/screenshots/swissknife-demo-queue.png" alt="SwissKnife conversion queue with two local sample images ready to convert" width="1200" />
 
 ## Highlights
 

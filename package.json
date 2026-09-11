@@ -11,6 +11,7 @@
     "dev:lan": "vite --port=2499 --host=0.0.0.0",
     "build": "vite build",
     "build:demo": "node scripts/build-demo.mjs",
+    "demo:capture": "node scripts/capture-demo.mjs",
     "preview": "vite preview --port=2499 --host=127.0.0.1",
     "preview:lan": "vite preview --port=2499 --host=0.0.0.0",
     "clean": "node -e \"import('node:fs').then(fs => fs.rmSync('dist', { recursive: true, force: true }))\"",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.14.0",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",

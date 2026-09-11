@@ -9,6 +9,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Changed
 
 - Let Docker Compose derive the stack and container names instead of imposing a fixed global container name.
+- Refresh README product screenshots from the isolated English public demo, with the intro dialog closed and a second view of the local conversion queue.
 
 ## [0.1.3] - 2026-09-08
 

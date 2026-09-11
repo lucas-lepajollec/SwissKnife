@@ -52,3 +52,19 @@ npx vite preview --port 2499
 ```
 
 Docker (`docker-compose.yml` / `docker-compose.build.yml`) reste l’instance auto-hébergée : pas de pastille Démo, pas de `noindex`.
+
+## Captures README reproductibles
+
+Régénérez les captures depuis une démo locale isolée :
+
+```bash
+npm ci
+npx playwright install chromium
+npm run demo:capture
+```
+
+Le script démarre son propre serveur sur `127.0.0.1:2514`, force l'anglais,
+ferme la boîte de dialogue d'introduction, et refuse de réutiliser un serveur
+déjà ouvert. Les fichiers de file d'attente sont des PNG 1×1 synthétiques,
+pas des médias visiteurs. Utilisez `SWISSKNIFE_CAPTURE_PORT` si le port `2514`
+est occupé.
