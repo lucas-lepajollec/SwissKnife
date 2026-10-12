@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+- Refresh compatible transitive dependencies to fix brace-expansion and source-map-js audit findings.
+
 ### Changed
 
 - Let Docker Compose derive the stack and container names instead of imposing a fixed global container name.
